@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "cefr_ensemble": "highest_confidence_per_instance",
+  "cefr_label_order": ["A1", "A2", "B1", "B2", "C1", "C2"],
+  "cefr_models": [
+    {
+      "id": "AbdullahBarayan/ModernBERT-base-doc_sent_en-Cefr",
+      "revision": "b00d1d4780e46f6410ea8a8509649044dee18298"
+    },
+    {
+      "id": "AbdullahBarayan/ModernBERT-base-doc_en-Cefr",
+      "revision": "3c29f5fbcdc753e99bb437ff9303df983486915b"
+    },
+    {
+      "id": "AbdullahBarayan/ModernBERT-base-reference_AllLang2-Cefr2",
+      "revision": "83337437aa82277e96b293665dc3186088a4a839"
+    }
+  ],
+  "meaningbert": {
+    "id": "davebulaval/MeaningBERT",
+    "revision": "f40ff1edfdf9f6a6121eb5701b8557426a268495",
+    "status": "official-model reproduction"
+  },
+  "inference": {
+    "batch_size": 8,
+    "device": "auto",
+    "deterministic": true
+  },
+  "bootstrap": {
+    "seed": 6120,
+    "samples": 2000,
+    "confidence": 0.95
+  },
+  "metric_status": {
+    "cefr_rmse": "official reproduction",
+    "meaningbert_source": "official-model reproduction",
+    "meaningbert_reference": "official-model reproduction",
+    "cefr_exact_accuracy": "supplementary",
+    "cefr_adjacent_accuracy": "supplementary",
+    "cefr_weighted_f1": "supplementary"
+  }
+}

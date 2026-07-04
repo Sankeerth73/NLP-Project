@@ -1,0 +1,5 @@
+system_a,system_b,metric,positive_favors,n,difference,ci_low,ci_high,seed,samples
+human_reference_oracle,identity,exact_match,human_reference_oracle,200,0.36,0.265,0.45,6120,2000
+human_reference_oracle,identity,meaningbert_source,human_reference_oracle,200,-13.623099365234374,-14.995676288604736,-12.257837886810302,6120,2000
+human_reference_oracle,identity,meaningbert_reference,human_reference_oracle,200,12.954516496658325,11.638972778320312,14.441495161056519,6120,2000
+human_reference_oracle,identity,squared_ordinal_error,human_reference_oracle,200,1.385,1.105,1.66,6120,2000

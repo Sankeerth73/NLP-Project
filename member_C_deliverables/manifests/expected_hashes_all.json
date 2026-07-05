@@ -1,0 +1,9 @@
+{
+  "files": {
+    "identity_baseline.jsonl": "714dee347edd43e82ea814c28bd9155b42472270eacfbad4423d93f668b8c531",
+    "reference_oracle_predictions.jsonl": "465aced2d26320a8f64010dfef383dc5de3417584f22e75058686e65b0c923ae",
+    "zero_shot.jsonl": "da130e0f29cf7e9b0fb1d84c316c825bddf7ace75c191e661151c896c16d2580",
+    "three_shot.jsonl": "e774435093b8065a72b0b6b7a1892d90bb7a29ddbf1885ea524924bccff873f5",
+    "self_refine.jsonl": "2d5c9c3d87fb59ad3e534f2494d663002e58c2eed272b07cdc80dcbf48967d52"
+  }
+}

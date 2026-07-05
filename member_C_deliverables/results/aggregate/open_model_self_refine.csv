@@ -1,0 +1,4 @@
+system,target,n,cefr_exact_accuracy,cefr_adjacent_accuracy,cefr_rmse,cefr_weighted_f1,meaningbert_source,meaningbert_reference,source_exact_rate,mean_revisions
+open_model_self_refine,ALL,200,0.175,0.61,1.5149257407543117,0.2568391608391608,82.83834877014161,76.39917825698852,0.0,1.035
+open_model_self_refine,A2,100,0.12,0.32,1.876166303929372,0.21428571428571427,82.70797206878662,72.4996463394165,0.0,0.65
+open_model_self_refine,B1,100,0.23,0.9,1.03440804327886,0.37398373983739835,82.96872547149658,80.29871017456054,0.0,1.42

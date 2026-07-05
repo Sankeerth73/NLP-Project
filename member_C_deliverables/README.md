@@ -8,10 +8,14 @@ MeaningBERT, caches neural outputs, and writes per-instance and aggregate result
 
 ## Current status
 
-The complete harness and the identity-baseline evaluation are available. The
-identity run covers all 200 test requests and is recorded in `results/`. Member B's
-three systems cannot be scored until their frozen prediction files exist; no Member B
-files were present when this baseline was run.
+The complete harness and the **final full-system evaluation** are available. A single
+neural run scored five systems over all 200 test requests: the identity baseline, the
+human-reference oracle, and Member B's `open_model_zero_shot`,
+`open_model_three_shot`, and `open_model_self_refine`. Results are in `results/`;
+Member B's three frozen files were SHA-256-verified against their manifests before
+scoring, and all final scores were independently recomputed from output text without
+using Member B's generation-time critic. See
+`handoffs/member_D_results_handoff.md` for the results table and interpretation.
 
 The identity rows copy the source exactly (`source_exact_rate = 1.0`). MeaningBERT
 uses its native approximately 0–100 regression scale and gives identical paragraphs

@@ -14,14 +14,14 @@
     "sha256": "6baf3e71fb87c86dd14c8adb28aee8659e37aec7d29c0391275bc9e745c1fcfb"
   },
   "environment": {
-    "platform": "macOS-15.5-arm64-arm-64bit",
-    "python": "3.12.8",
+    "platform": "macOS-26.5.1-arm64-arm-64bit",
+    "python": "3.10.9",
     "torch": "2.12.0",
     "transformers": "4.53.1"
   },
   "expected_hashes": {
-    "path": "member_C_deliverables/results/sanity/prediction_hashes.json",
-    "sha256": "03260501581289af1d6bab077c5359a4efceda968b3da78b327f7f674b176f2a",
+    "path": "member_C_deliverables/manifests/expected_hashes_all.json",
+    "sha256": "ff9b2e4c3cae3ee2bf5611017fdecb5b5fcaa2475d4d5c410714ae1ff98980df",
     "verified": true
   },
   "models": {
@@ -48,9 +48,16 @@
   },
   "predictions": {
     "member_A_deliverables/data/processed/identity_baseline.jsonl": "714dee347edd43e82ea814c28bd9155b42472270eacfbad4423d93f668b8c531",
+    "member_B_deliverables/predictions/self_refine.jsonl": "2d5c9c3d87fb59ad3e534f2494d663002e58c2eed272b07cdc80dcbf48967d52",
+    "member_B_deliverables/predictions/three_shot.jsonl": "e774435093b8065a72b0b6b7a1892d90bb7a29ddbf1885ea524924bccff873f5",
+    "member_B_deliverables/predictions/zero_shot.jsonl": "da130e0f29cf7e9b0fb1d84c316c825bddf7ace75c191e661151c896c16d2580",
     "member_C_deliverables/results/sanity/reference_oracle_predictions.jsonl": "465aced2d26320a8f64010dfef383dc5de3417584f22e75058686e65b0c923ae"
   },
   "schema_version": 1,
   "split": "test",
-  "upstream_manifests": {}
+  "upstream_manifests": {
+    "member_B_deliverables/manifests/self_refine.json": "3200a61c0c72b3b0870e3a9711c5c4e86b94a3f0522c39b5f4f1590fbdc07e71",
+    "member_B_deliverables/manifests/three_shot.json": "83aad6edae0d6fe81bae56373c29013abde7485579b43108b1a877de0f87326f",
+    "member_B_deliverables/manifests/zero_shot.json": "619c560524614873bfc644dee2576d81d7dbe69d7a64db4da0be1d483bb9d359"
+  }
 }

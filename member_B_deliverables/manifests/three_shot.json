@@ -1,0 +1,22 @@
+{
+  "system": "open_model_three_shot",
+  "prompt_version": "few_shot_v1",
+  "n_records": 200,
+  "frozen_at_unix": 1783140407.190696,
+  "predictions_file": "three_shot.jsonl",
+  "predictions_sha256": "e774435093b8065a72b0b6b7a1892d90bb7a29ddbf1885ea524924bccff873f5",
+  "decoding": {
+    "do_sample": false,
+    "seed": 42,
+    "max_new_tokens": 150
+  },
+  "model": {
+    "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "main",
+    "quantization": "none",
+    "device": "cpu",
+    "library_versions": {
+      "transformers": "5.13.0"
+    }
+  }
+}

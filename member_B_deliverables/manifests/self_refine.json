@@ -1,0 +1,25 @@
+{
+  "system": "open_model_self_refine",
+  "prompt_version": "refine_v1",
+  "n_records": 200,
+  "frozen_at_unix": 1783140407.192666,
+  "predictions_file": "self_refine.jsonl",
+  "predictions_sha256": "2d5c9c3d87fb59ad3e534f2494d663002e58c2eed272b07cdc80dcbf48967d52",
+  "decoding": {
+    "do_sample": false,
+    "seed": 42,
+    "max_new_tokens": 150
+  },
+  "model": {
+    "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "main",
+    "quantization": "none",
+    "device": "cpu",
+    "library_versions": {
+      "transformers": "5.13.0"
+    }
+  },
+  "refinement": {
+    "max_revisions": 2
+  }
+}

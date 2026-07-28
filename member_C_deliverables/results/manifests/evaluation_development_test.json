@@ -1,0 +1,20 @@
+{
+  "backend": "development",
+  "config": {
+    "path": "member_C_deliverables/configs/evaluation_v1.json",
+    "sha256": "d9c742e6f9a059d12f2ad3e713c5c59f486117adb916459e0f6bd64e6063e77e"
+  },
+  "dataset": {
+    "path": "member_A_deliverables/data/processed/tsar2025_normalized.jsonl",
+    "sha256": "6baf3e71fb87c86dd14c8adb28aee8659e37aec7d29c0391275bc9e745c1fcfb"
+  },
+  "environment": {
+    "platform": "macOS-15.5-arm64-arm-64bit",
+    "python": "3.12.8"
+  },
+  "predictions": {
+    "member_A_deliverables/data/processed/identity_baseline.jsonl": "714dee347edd43e82ea814c28bd9155b42472270eacfbad4423d93f668b8c531"
+  },
+  "schema_version": 1,
+  "split": "test"
+}

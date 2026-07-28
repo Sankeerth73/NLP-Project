@@ -1,0 +1,274 @@
+\documentclass[11pt]{article}
+
+% Use the official ACL style file in Overleaf.
+% Draft/review version with line numbers:
+\usepackage[review]{acl}
+% Final version without line numbers:
+% \usepackage{acl}
+
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{inconsolata}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{url}
+
+\title{Prompt-Based CEFR-Controlled Text Simplification with a Small Open-Weight LLM}
+
+\author{
+  Jinyu Chen \and
+  Sankeerth Adisha \and
+  David Kim \and
+  Shaohua Liu \\
+  Northeastern University \\
+  \texttt{\{replace-with-emails\}@northeastern.edu}
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+% Owner: Member D. Write this last. Target: 150--180 words, max 200.
+% Replace this placeholder with a concise summary of the task, method, data,
+% evaluation, and main finding. Mention TSAR 2025, CEFR-controlled
+% simplification, Qwen/Qwen2.5-0.5B-Instruct, zero-shot, three-shot,
+% self-refinement, CEFR accuracy/RMSE, MeaningBERT, and the core result that
+% three-shot prompting was stronger than self-refinement in this setting.
+Text simplification aims to rewrite text for readers with different proficiency levels while preserving meaning. We study CEFR-controlled English text simplification on the TSAR 2025 task, comparing direct zero-shot prompting, target-matched three-shot prompting, and CEFR-feedback self-refinement with a small open-weight instruction model. We evaluate target-level control using reproduced CEFR exact accuracy and ordinal RMSE, and semantic preservation using MeaningBERT source and reference similarity. On 200 test requests, three-shot prompting is the strongest generated condition, improving CEFR exact accuracy and source similarity over zero-shot. In contrast, self-refinement performs close to zero-shot despite adding an average of 1.04 revisions. Results also show a strong target-level asymmetry: B1 requests are easier than A2 requests across generated systems. These findings suggest that, for this small model, concrete demonstrations are more useful than a lightweight CEFR-label feedback loop.
+\end{abstract}
+
+\section{Introduction}
+% Owner: Member D. Target: about 0.75 page.
+
+Text simplification aims to rewrite text so that it is easier to read while preserving the original meaning. This problem is important for language learners, accessibility technologies, and readers who need text at a specific proficiency level. Recent shared tasks have moved beyond generic simplification toward readability-controlled simplification, where systems must produce output matching a requested level such as A2 or B1 on the Common European Framework of Reference for Languages (CEFR).
+
+% Replace/extend with context from prior work: traditional simplification,
+% controllable simplification, LLM prompting, and TSAR 2025.
+However, controlling readability remains difficult because a system must satisfy two competing goals: simplify enough to match the target level while preserving the source meaning. Large proprietary models and complex multi-stage systems have shown promising results, but it is less clear whether very small open-weight instruction models can reliably perform CEFR-controlled simplification through prompting alone.
+
+In this paper, we study prompt-based CEFR-controlled text simplification using a small open-weight language model. We compare three inference-only conditions: direct zero-shot prompting, target-matched three-shot prompting, and CEFR-feedback self-refinement. Our experiments use the TSAR 2025 English readability-controlled simplification data and evaluate both target-level control and semantic preservation.
+
+Our contributions are:
+\begin{itemize}
+    \item We provide a reproducible evaluation of zero-shot, three-shot, and self-refinement prompting for CEFR-controlled simplification with a small open-weight model.
+    \item We measure the tradeoff between readability control and semantic preservation using CEFR prediction and MeaningBERT metrics.
+    \item We show that, in our setting, three-shot prompting improves over zero-shot, while CEFR-feedback self-refinement performs close to zero-shot despite adding revision steps.
+\end{itemize}
+
+\section{Task and Problem}
+% Owner: Member A. Target: about 0.75 page.
+
+\subsection{Task Definition}
+
+Given an English source paragraph and a target CEFR level, the system must produce a simplified paragraph that preserves the source meaning while matching the requested readability level. In our experiments, the target levels are A2 and B1.
+
+% Member A: replace this with a precise description of the TSAR 2025 task.
+The input consists of a source paragraph and a target CEFR level. The output is a simplified paragraph intended for readers at that level.
+
+\subsection{Why the Problem Is Interesting}
+
+% Member A: explain why this is not just generic simplification.
+The task is challenging because simpler text is not always better: output that is too simple may omit essential information, while output that preserves every detail may remain too complex. CEFR-controlled simplification therefore requires balancing readability, adequacy, fluency, and discourse-level meaning preservation.
+
+\subsection{Research Questions}
+
+We ask:
+
+\begin{description}
+    \item[RQ1:] How do zero-shot, three-shot, and CEFR-feedback self-refinement prompting affect target-level control?
+    \item[RQ2:] What happens to semantic preservation when target-level control changes?
+    \item[RQ3:] Are A2 and B1 targets equally difficult for a small open-weight instruction model?
+\end{description}
+
+\section{Related Work}
+% Owner: Member D, with citations contributed by all members.
+% Target: about 1.25 pages. Do not write one paragraph per paper.
+
+\subsection{Text Simplification Data and Systems}
+
+% Replace with synthesized discussion. Discuss SARI, TurkCorpus, ASSET, ACCESS,
+% MUSS, and neural simplification baselines where relevant.
+Prior work on text simplification has developed parallel simplification corpora, supervised sequence-to-sequence systems, controllable systems, and automatic metrics. This literature provides the foundation for measuring whether a system preserves meaning while reducing linguistic complexity \citep{xu-etal-2016-optimizing,alva-manchego-etal-2020-asset}.
+
+\subsection{Controllable and CEFR-Based Simplification}
+
+% Discuss controllable simplification and CEFR/readability labels.
+Controllable simplification extends the task by requiring outputs to satisfy explicit constraints, such as target length, lexical complexity, syntactic complexity, or readability level. CEFR-based simplification is especially useful for language-learning and accessibility settings because it frames readability as a target proficiency level rather than a generic simplicity score.
+
+\subsection{LLM Prompting and Iterative Refinement}
+
+% Discuss zero-shot prompting, few-shot prompting, reranking, feedback loops,
+% and multi-agent/self-refinement systems.
+Large language models can perform simplification through prompting, but prompt-based systems vary in how much guidance they provide. Zero-shot prompting tests instruction following directly, few-shot prompting gives the model concrete examples of the target style, and iterative methods use evaluator or critic feedback to revise earlier drafts. Our study focuses on a narrow comparison of these strategies for one small open-weight model.
+
+\subsection{Evaluation of Simplification}
+
+% Discuss why overlap metrics alone are insufficient.
+Evaluation is difficult because surface overlap, readability, and meaning preservation can disagree. We therefore report both CEFR-level metrics and semantic similarity metrics rather than relying on a single score. This reflects prior concerns that simplification systems can improve readability while losing important meaning.
+
+\section{Data}
+% Owner: Member A. Target: about 0.75 page.
+
+\subsection{Dataset}
+
+% Replace with exact dataset details from member_A_deliverables.
+We use the pinned TSAR 2025 English readability-controlled simplification release prepared in our data pipeline. The evaluated release contains 100 test source texts and 200 target requests, with one A2 and one B1 request per source. We preserve the distinction between source text, target level, and reference simplifications to avoid reference leakage during generation.
+
+\subsection{Split and Leakage Policy}
+
+% Member A: describe generation_inputs.jsonl and few_shot_pool.jsonl.
+The generation pipeline receives only reference-free inputs for test requests. Few-shot examples are drawn from the permitted few-shot pool and are selected deterministically. Test references are used only by the independent evaluation pipeline.
+
+\subsection{Dataset Statistics}
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrrl}
+\toprule
+Split & Sources & Requests & A2 & B1 & Notes \\
+\midrule
+Test & 100 & 200 & 100 & 100 & paired targets \\
+\bottomrule
+\end{tabular}
+\caption{Dataset statistics for the TSAR 2025 release used in our experiments. Replace or extend this table with exact length and compression statistics from Member A's artifacts.}
+\label{tab:data-stats}
+\end{table}
+
+\section{Method}
+% Owner: Member B. Target: about 1.25 pages.
+
+\subsection{Model}
+
+We use \texttt{Qwen/Qwen2.5-0.5B-Instruct} as the open-weight instruction model for all generated systems. The model is run with deterministic decoding, no sampling, seed 42, and a maximum generation length of 150 new tokens.
+
+% Member B: add exact manifest details, device, revision, and prompt-processing rules.
+
+\subsection{Zero-Shot Prompting}
+
+The zero-shot condition gives the model the source paragraph and target CEFR level, then asks it to return only the simplified paragraph without explanation.
+
+\subsection{Three-Shot Prompting}
+
+The three-shot condition adds three target-matched demonstrations selected from the permitted few-shot pool. Demonstrations are selected deterministically and never use test references.
+
+\subsection{CEFR-Feedback Self-Refinement}
+
+Self-refinement starts from a direct draft. A generation-time CEFR critic predicts the draft's level. If the predicted level does not match the requested level, the system asks the model to revise the previous output using the source, target level, predicted level, and revision instruction. The loop stops when the predicted level matches the target or after two revisions.
+
+The generation-time critic is used only to trigger revisions. Final reported CEFR scores are independently recomputed by the evaluation pipeline.
+
+\section{Evaluation Setup}
+% Owner: Member C. Target: about 0.75 page.
+
+\subsection{Systems Compared}
+
+We evaluate five systems: an identity baseline, a human-reference oracle, open-model zero-shot prompting, open-model three-shot prompting, and open-model self-refinement. The identity baseline copies the source text and tests whether metrics behave sensibly. The human-reference oracle uses a reference simplification and serves as an upper sanity bound, not as a deployable system.
+
+\subsection{Metrics}
+
+We report CEFR exact accuracy, CEFR RMSE, MeaningBERT source similarity, MeaningBERT reference similarity, and mean revision count. CEFR RMSE uses the ordinal mapping A1=1, A2=2, B1=3, B2=4, C1=5, and C2=6. Higher is better for exact accuracy and MeaningBERT scores; lower is better for CEFR RMSE.
+
+\subsection{Uncertainty}
+
+We use paired bootstrap resampling with 2,000 samples and seed 6120 to estimate uncertainty for pairwise system differences.
+
+\section{Results and Analysis}
+% Owner: Member C drafts; Member D integrates. Target: about 1.5 pages.
+
+\subsection{Main Results}
+
+\begin{table*}[t]
+\centering
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+System & CEFR Exact $\uparrow$ & CEFR RMSE $\downarrow$ & MB-source $\uparrow$ & MB-reference $\uparrow$ & Mean rev. \\
+\midrule
+Identity & 0.265 & 1.327 & 94.46 & 81.45 & 0.00 \\
+Zero-shot & 0.165 & 1.526 & 82.75 & 76.28 & 0.00 \\
+Three-shot & 0.200 & 1.444 & 84.93 & 76.48 & 0.00 \\
+Self-refine & 0.175 & 1.515 & 82.84 & 76.40 & 1.04 \\
+Human oracle & 0.625 & 0.612 & 80.84 & 94.41 & 0.00 \\
+\bottomrule
+\end{tabular}
+\caption{Main evaluation results on 200 test requests. Replace this table with a generated version from \texttt{main\_results.csv} before submission.}
+\label{tab:main-results}
+\end{table*}
+
+Table~\ref{tab:main-results} shows that the three-shot system obtains the strongest generated-system CEFR exact accuracy and RMSE. Compared with zero-shot, three-shot improves exact accuracy from 0.165 to 0.200 and lowers RMSE from 1.526 to 1.444. It also improves MeaningBERT source similarity from 82.75 to 84.93.
+
+Self-refinement performs close to zero-shot despite adding revisions. It reaches 0.175 exact accuracy and 1.515 RMSE, with an average of 1.04 revisions per request. The paired bootstrap intervals should be used to avoid overclaiming these small differences.
+
+\subsection{A2 versus B1}
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\toprule
+System & A2 Exact & B1 Exact & A2 RMSE & B1 RMSE \\
+\midrule
+Zero-shot & 0.120 & 0.210 & 1.866 & 1.086 \\
+Three-shot & 0.080 & 0.320 & 1.761 & 1.034 \\
+Self-refine & 0.120 & 0.230 & 1.876 & 1.034 \\
+\bottomrule
+\end{tabular}
+\caption{Generated-system results by target level. B1 is easier than A2 across generated systems.}
+\label{tab:level-breakdown}
+\end{table}
+
+Across systems, B1 is easier to control than A2. For example, three-shot reaches 0.320 exact accuracy on B1 but only 0.080 on A2. This suggests that the model often fails to simplify aggressively enough for A2.
+
+\subsection{Qualitative Error Analysis}
+
+% Member C: replace with one compact example from per_instance/*.jsonl.
+\paragraph{Source}
+[Paste one source paragraph.]
+
+\paragraph{Target level}
+[A2 or B1.]
+
+\paragraph{Zero-shot output}
+[Paste output.]
+
+\paragraph{Self-refined output}
+[Paste output.]
+
+\paragraph{Analysis}
+[One or two sentences explaining whether the output is too complex, loses meaning, over-simplifies, hallucinates, or fails discourse/coreference.]
+
+\subsection{Discussion}
+
+The results suggest that examples are more useful than our lightweight feedback loop for this model. Three-shot prompting provides concrete demonstrations of the desired rewrite style, while self-refinement depends on a noisy level signal and asks the same small model to repair its own output. The gap between generated systems and the human-reference oracle shows that small open-weight models still struggle with precise CEFR control and meaning preservation on paragraph-level simplification.
+
+\section{Conclusion and Future Work}
+% Owner: Member D. Target: about 0.4 page.
+
+We evaluated zero-shot, three-shot, and CEFR-feedback self-refinement prompting for CEFR-controlled text simplification with a small open-weight instruction model. On the TSAR 2025 test requests, three-shot prompting produced the best generated-system results, while self-refinement added revision steps without clear aggregate improvement over zero-shot. The results also show a strong target-level asymmetry: B1 requests are easier than A2 requests across all generated systems.
+
+Future work should test larger open-weight models, stronger example-selection strategies, reranking with separate readability and meaning models, and human evaluation of adequacy, fluency, and simplicity. A stronger refinement method may need more informative feedback than a predicted CEFR label alone.
+
+\section*{Limitations}
+% Owner: Member D. ACL requires this section after Conclusion and before References.
+
+This study has several limitations. First, we evaluate one small open-weight model, so the findings may not generalize to larger models or different model families. Second, the test set is small, with 200 target requests, limiting the strength of statistical conclusions. Third, the self-refinement loop depends on an automatic CEFR critic, and errors from this critic can affect revision behavior. Fourth, our evaluation relies on automatic CEFR and semantic similarity metrics; we do not report a full independent human evaluation. Finally, prompt wording and demonstration selection may influence the results, and we test only one fixed prompt configuration per condition.
+
+\bibliography{references}
+
+\appendix
+
+\section{Prompt Templates}
+% Optional. Not part of main 8 pages if placed after references.
+[Paste direct, three-shot, and refinement prompt templates if needed.]
+
+\section{Additional Results}
+[Place full ALL/A2/B1 result table, extra qualitative examples, and extended bootstrap results here if they do not fit in the main paper.]
+
+\end{document}
+

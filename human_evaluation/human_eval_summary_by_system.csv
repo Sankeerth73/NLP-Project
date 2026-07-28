@@ -1,0 +1,4 @@
+system,meaning_mean,fluency_mean,cefr_fit_mean,rating_count_per_metric,overall_wins,win_rate_ties_excluded,win_rate_ties_in_denominator
+zero_shot,3.600,4.533,3.517,60,3,0.081,0.050
+three_shot,3.833,4.367,3.417,60,33,0.892,0.550
+self_refine,3.517,4.517,3.433,60,1,0.027,0.017

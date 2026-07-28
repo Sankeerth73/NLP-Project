@@ -7,3 +7,6 @@ __pycache__/
 
 # Member C neural score cache (reproducible artifact, regenerated on demand)
 member_C_deliverables/cache/
+
+# Private annotator key for blind human evaluation - never publish
+human_eval_key_private.csv

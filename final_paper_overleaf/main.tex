@@ -145,9 +145,7 @@ Test & 100 & 200 & 100 & 100 & paired targets \\
 
 \subsection{Model}
 
-We use \texttt{Qwen/Qwen2.5-0.5B-Instruct} as the open-weight instruction model for all generated systems. The model is run with deterministic decoding, no sampling, seed 42, and a maximum generation length of 150 new tokens.
-
-% Member B: add exact manifest details, device, revision, and prompt-processing rules.
+We use \texttt{Qwen/Qwen2.5-0.5B-Instruct} (revision \texttt{main}, unquantized) as the open-weight instruction model for all generated systems, run on CPU with HuggingFace Transformers 5.13.0. The model is run with deterministic decoding, no sampling, seed 42, and a maximum generation length of 150 new tokens. These settings are identical across the zero-shot, three-shot, and self-refinement conditions and are recorded in per-run manifest files alongside a SHA-256 hash of the corresponding predictions file, allowing exact reproduction and integrity verification.
 
 \subsection{Zero-Shot Prompting}
 
@@ -271,4 +269,3 @@ This study has several limitations. First, we evaluate one small open-weight mod
 [Place full ALL/A2/B1 result table, extra qualitative examples, and extended bootstrap results here if they do not fit in the main paper.]
 
 \end{document}
-

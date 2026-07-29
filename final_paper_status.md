@@ -69,31 +69,29 @@ automatic-metric ranking.
 
 Ordered by severity.
 
-### 2.1 BLOCKER — Main results provenance (Members B + C)
+### 2.1 RESOLVED — Main results provenance (verified 2026-07-29)
 
-`skeleton` Table 2 and Section 7.1/7.2 contain numbers for zero-shot,
-three-shot, and self-refine (e.g., three-shot CEFR exact 0.200), but in the
-current workspace:
+The full pipeline artifacts are on GitHub (`EvanjyChen/NLP-Project@main`) and
+have been synced back to this workspace:
 
-- `member_C_deliverables/results/main_results.csv` contains only the
-  `identity` and `human_reference_oracle` rows;
-- `pairwise_bootstrap.csv` contains only oracle-vs-identity comparisons;
-- Member B's prediction files (`zero_shot.jsonl`, `three_shot.jsonl`,
-  `self_refine.jsonl`) are not present anywhere in `Proposal/`.
+- `member_B_deliverables/predictions/{zero_shot,three_shot,self_refine}.jsonl`
+  — 200 frozen records each, with sha256 manifests (Qwen2.5-0.5B-Instruct,
+  seed 42, deterministic decoding, max 150 new tokens; matches Section 5.1).
+- `member_C_deliverables/results/main_results.csv` — all five systems with
+  ALL/A2/B1 breakdowns; **numbers match skeleton Table 2 and the A2/B1 table
+  exactly** (zero-shot 0.165/1.526, three-shot 0.200/1.444, self-refine
+  0.175/1.515).
+- `pairwise_bootstrap.csv` — all 10 system pairs. Three-shot beats zero-shot
+  significantly on MeaningBERT-source (Δ=2.19, CI excludes 0); the CEFR
+  exact-match gap (Δ=0.035, CI [−0.025, ...]) does not reach significance —
+  keep the paper's hedged wording.
+- `per_instance/` now includes all generated systems — 7.3 qualitative
+  example is unblocked.
 
-Action items:
+Remaining checks:
 
-- [ ] Member B: deliver the frozen prediction files (all 200 test requests,
-      three conditions) plus the generation manifest (model revision, seed,
-      decoding settings).
-- [ ] Member C: re-run the evaluation harness on all five systems; regenerate
-      `main_results.csv`, per-system ALL/A2/B1 aggregates, and the full
-      pairwise bootstrap table.
-- [ ] Member C/D: reconcile the regenerated numbers with Table 2 and the
-      A2-vs-B1 table in Section 7.2; update text if any number moves.
-- [ ] Until then, no claims answering RQ1–RQ3 should be considered final
-      (this is also stated in Member C's handoff:
-      `member_C_deliverables/handoffs/member_D_results_handoff.md`).
+- [ ] Member C/D: confirm the bootstrap CI wording in 7.1 matches
+      `pairwise_bootstrap.csv` before submission.
 
 ### 2.2 Section 3 Related Work (Member D + all)
 
